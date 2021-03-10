@@ -1,0 +1,11 @@
+.buttonsGroup {
+    width: 45px;
+}
+
+.listItem {
+    list-style: none;
+}
+
+.taskButton:hover {
+    cursor: pointer;
+}

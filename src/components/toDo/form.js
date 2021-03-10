@@ -1,17 +1,72 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import _ from 'lodash'
+import React from 'react';
+import { connect } from 'react-redux';
+import cn from 'classnames';
+import * as actions from '../../actions/index.js';
+import Task from './Task.js'
+
+const actionCreators = {
+    removeTask: actions.removeTask,
+    addTask: actions.addTask,
+    updateText: actions.updateText,
+  }
+
+const mapStateToProps = (state) => {
+    // BEGIN (write your solution here)
+    const { tasks, text } = state;
+    return {
+      tasks,
+      text,
+    }
+    // END
+  };
 
 
-export default (props) => {
+
+
+const Form = ({ 
+    tasks,
+    text,
+    removeTask,
+    addTask,
+    updateText,
+    }) => {
+    const addHandler = (e) => {
+        e.preventDefault()
+        const task = {
+            text,
+            id: _.uniqueId(),
+        };
+        addTask({ task });
+    };
+
+    const updateTextHandler = (e) => {
+        updateText({ text: e.target.value });
+    }
+
+    const removeHandler = (id) => (e) => {
+        removeTask(id);
+    }
+
     return (
         <div className="container">
-            <div class="mb-3">
-                <label class="form-label">Какие планы?</label>
-                <input type="text" class="form-control" placeholder="Сходить в кино..." />
-            </div>
-            <div>
-
+            <form>
+                <div className="mb-3">
+                    <label className="form-label">Какие планы?</label>
+                    <input onChange={ updateTextHandler } type="text" value={text} className="form-control" placeholder="Сходить в кино..." />
+                </div>
+                <button type="submit" onClick={addHandler} className="btn btn-primary">Добавить</button>
+            </form>
+            <div className="m-5">
+                <ul className="pl-0">
+                    {tasks.allIds.map((id) => {
+                        return <Task key={id} text={tasks.byId[id].text} removeTask={removeHandler(id)}/>
+                    })}
+                </ul>
             </div>
         </div>
     );
 }
+//actionCreators?
+export default connect(mapStateToProps, actionCreators)(Form);
