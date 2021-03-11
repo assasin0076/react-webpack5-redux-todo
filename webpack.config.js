@@ -1,5 +1,8 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 let path = require('path');
+const isProd = process.env.NODE_ENV === 'production';
+
+
 
 let conf = {
     entry: './src/main.js',
@@ -20,9 +23,9 @@ let conf = {
                 exclude: '/node_modules/',
             },
             {
-                test: /\.module\.css$/,
+                test: /(\w)*\.module\.(sa|sc|c)ss$/,
                 use: [
-                    MiniCssExtractPlugin.loader, 
+                    isProd ? MiniCssExtractPlugin.loader : 'style-loader', 
                     {
                         loader: 'css-loader',
                         options: {
@@ -31,21 +34,22 @@ let conf = {
                             },
 
                         }
-                    }
+                    },
+                    'postcss-loader',
+                    'sass-loader'
                 ]
             },
             {
-                test: /^((?!\.module).)*css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader']
-            }
+                test: /^((?!\.module).)*(sa|sc|c)ss$/,
+                use: [
+                    isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader']
+            },
+
         ]
     },
-    plugins: [
-        new MiniCssExtractPlugin({
-            //main.css
-            filename: 'main.css'
-        })
-    ],
     // optimization: {
     //     splitChunks: {
     //         cacheGroups: {
@@ -67,9 +71,18 @@ let conf = {
     // }
 };
 module.exports = (env, options) => {
-    let isProd = options.mode === 'production';
     conf.devtool = isProd ? 'source-map' : 'eval-cheap-module-source-map';
     conf.target = isProd ? 'browserslist' : 'web';
+    const plugins = [];
+    if (!isProd) {
+        // enable in production only
+        plugins.push(new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        }));
+    }
+    conf.plugins = plugins;
+
 
     return conf;
 };

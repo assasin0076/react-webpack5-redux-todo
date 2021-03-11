@@ -49,7 +49,7 @@ const Form = ({
     
 
     return (
-        <div className="container">
+        <div className="container mt-4">
             <form>
                 <div className="mb-3">
                     <label className="form-label">Какие планы?</label>

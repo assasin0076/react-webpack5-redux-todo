@@ -1,9 +1,10 @@
 import React from 'react';
-import style from './Task.module.css';
+import style from './Task.module.scss';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index.js';
 import cn from 'classnames';
 import { uniqueId } from 'lodash';
+import './style.scss';
 
 const actionCreators = {
     removeTask: actions.removeTask,
