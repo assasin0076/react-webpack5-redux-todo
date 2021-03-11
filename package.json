@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.6.0",
+    "bootstrap-icons": "^1.4.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.21",
     "react": "^17.0.1",

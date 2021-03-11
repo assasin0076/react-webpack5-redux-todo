@@ -37,6 +37,7 @@ const Form = ({
         const task = {
             text,
             id: _.uniqueId(),
+            status: 'active',
         };
         addTask({ task });
     };
@@ -45,9 +46,7 @@ const Form = ({
         updateText({ text: e.target.value });
     }
 
-    const removeHandler = (id) => (e) => {
-        removeTask(id);
-    }
+    
 
     return (
         <div className="container">
@@ -61,7 +60,7 @@ const Form = ({
             <div className="m-5">
                 <ul className="pl-0">
                     {tasks.allIds.map((id) => {
-                        return <Task key={id} text={tasks.byId[id].text} removeTask={removeHandler(id)}/>
+                        return <Task key={id} task={ tasks.byId[id] } />
                     })}
                 </ul>
             </div>

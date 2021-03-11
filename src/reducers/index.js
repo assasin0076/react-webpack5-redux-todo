@@ -17,6 +17,20 @@ const tasks = handleActions({
             byId: _.omit(state.byId, id),
             allIds: state.allIds.filter((el) => el != id),
         }
+    },
+    [actions.completeTask](state, { payload }) {
+      const id = payload;
+      const mapping = {
+        'active': 'complete',
+        'complete': 'active',
+      }
+      const selected = state.byId[id];
+      console.log(mapping[selected.status])
+      const newByid = {...state.byId, [id]: { ...selected, status: ( mapping[selected.status] ) } };
+      return {
+        byId: newByid,
+        allIds: state.allIds,
+      }
     }
   }, { byId: {}, allIds: [] });
 
