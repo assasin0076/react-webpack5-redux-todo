@@ -25,7 +25,6 @@ const tasks = handleActions({
         'complete': 'active',
       }
       const selected = state.byId[id];
-      console.log(mapping[selected.status])
       const newByid = {...state.byId, [id]: { ...selected, status: ( mapping[selected.status] ) } };
       return {
         byId: newByid,
