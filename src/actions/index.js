@@ -3,6 +3,7 @@ import { createAction } from 'redux-actions';
 export const addTask = createAction('TASK_ADD');
 export const removeTask = createAction('TASK_REMOVE');
 export const completeTask = createAction('TASK_COMPLETE');
+export const changeVisibility = createAction('TASK_CHANGE_VISIBILITY');
 
 export const updateDescText = createAction('TEXT_DESC_UPDATE');
 export const updateText = createAction('TEXT_UPDATE');

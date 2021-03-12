@@ -18,28 +18,58 @@ const tasks = handleActions({
             allIds: state.allIds.filter((el) => el != id),
         }
     },
-    [actions.completeTask](state, { payload }) {
-      const id = payload;
+    [actions.completeTask](state, { payload: id }) {
       const mapping = {
         'active': 'complete',
         'complete': 'active',
       }
       const selected = state.byId[id];
-      const newByid = {...state.byId, [id]: { ...selected, status: ( mapping[selected.status] ) } };
+      const newByid = {...state.byId, [id]: { 
+          ...selected, 
+          state: { 
+            ...selected.state,
+            status: ( mapping[selected.state.status] ) 
+          }
+        } 
+      };
       return {
         byId: newByid,
         allIds: state.allIds,
       }
+    },
+    [actions.changeVisibility](state, { payload: id }) {
+      const mapping = {
+        'hidden': 'show',
+        'show': 'hidden',
+      }
+      const selected = state.byId[id];
+      const newByid = {...state.byId, [id]: { 
+          ...selected, 
+          state: { 
+            ...selected.state,
+            descStatus: ( mapping[selected.state.descStatus] ) 
+          }
+        } 
+      };
+      return {
+        byId: newByid,
+        allIds: state.allIds,
+      };
     }
   }, { byId: {}, allIds: [] });
 
 const text = handleActions({
     [actions.updateText](state, { payload: { text = '' } } ) {
-      console.log(state);
         return {
           ...state,
           taskText: text,
         };
+    },
+    [actions.updateDescText](state, { payload: { text = '' } }) {
+      return {
+        ...state,
+        descText: text,
+      }
     }
 }, { taskText:'', descText:'' });
 
@@ -60,10 +90,11 @@ const UIState = handleActions({
 } 
 })
 
+
 const rootReducer = combineReducers({
     tasks,
     text,
-    UIState
+    UIState,
 });
 
 export default rootReducer;

@@ -9,23 +9,23 @@ import './style.scss';
 const actionCreators = {
     removeTask: actions.removeTask,
     completeTask: actions.completeTask,
+    changeVisibility: actions.changeVisibility,
   }
 
 const mapStateToProps = (state) => {
-    // BEGIN (write your solution here)
-    const { tasks } = state;
+    const { tasks, } = state;
     return {
       tasks,
     }
-    // END
   };
 
-const Task = ({ removeTask, completeTask, task }) => {
-    const { text, id, status } = task;
+const Task = ({ removeTask, completeTask, changeVisibility, task }) => {
+    const { text, id, state } = task;
 
     
     const completeHandler = (id) => (e) => {
         completeTask(id);
+        e.stopPropagation();
     }
 
     const mappingChangeStatusIcon = {
@@ -42,14 +42,15 @@ const Task = ({ removeTask, completeTask, task }) => {
                 <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"></path>
             </svg>
         )
-    }
+    };
     const changeStatusIcon = {
         action: completeHandler(id),
-        icon: (mappingChangeStatusIcon[status])
+        icon: (mappingChangeStatusIcon[state.status])
     };
 
     const removeHandler = (id) => (e) => {
         removeTask(id);
+        e.stopPropagation();
     }
 
     const removeIcon = 
@@ -70,22 +71,49 @@ const Task = ({ removeTask, completeTask, task }) => {
         'complete': 'alert-success',
     }
     const alertClasses = cn({
-        [mappingAllertClasses[status]]: true,
-        'alert d-flex flex-row align-items-center justify-content-between': true,
+        [mappingAllertClasses[state.status]]: true,
+        'alert': true,
+    });
+    const flexClasses = cn({
+        'd-flex flex-row align-items-center justify-content-between': true,
+    });
+    const listItemClasses = cn({
+        [style.taskWithDesc]: task.descText != 'none',
     })
 
+    const showDescMapping = {'no': 'hide', 'yes': ''};
+
+    const a = () => {
+
+    }
+    let showDesc = 'hide';
+    const descVisiblilityHandler = (e) => {
+        if(task.descText != 'none') {
+            changeVisibility(id);
+        }
+    };
+    
+    
+
     return (
-        <li className={style.listItem} >
+        <li className={`${style.listItem} ${listItemClasses}`} onClick={descVisiblilityHandler}>
             <div className={alertClasses} role="alert">
-                <div className='p-1'>
-                    <p className="m-0">{text}</p>
+                <div className={flexClasses}>
+                    <div className='p-1'>
+                        <p className="m-0">{text}</p>
+                    </div>
+                    <div className={`d-flex justify-content-between ${style.buttonsGroup}`}>
+                        {icons.map(({ action = () => {}, icon }) => {
+                            return <div key={uniqueId()} className={style.taskButton} onClick={action}>{icon}</div>
+                        })}
+                    </div>
                 </div>
-                <div className={`d-flex justify-content-between ${style.buttonsGroup}`}>
-                    {icons.map(({ action = () => {}, icon }) => {
-                        return <div key={uniqueId()} className={style.taskButton} onClick={action}>{icon}</div>
-                    })}
+                <div hidden={task.state.descStatus == 'hidden' ? 'hide' : ''} className='description'>
+                    <hr />
+                    <p>{task.descText}</p>
                 </div>
             </div>
+            
             
         </li>
     )

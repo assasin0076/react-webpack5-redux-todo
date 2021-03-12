@@ -35,6 +35,7 @@ const Form = ({
     removeTask,
     addTask,
     updateText,
+    updateDescText,
     reverseShowState,
     }) => {
     const addHandler = (e) => {
@@ -43,7 +44,10 @@ const Form = ({
             text: text.taskText,
             descText: UIState.desc.show == 'no' ? 'none' : text.descText,
             id: _.uniqueId(),
-            status: 'active',
+            state: {
+                status: 'active',
+                descStatus: 'hidden',
+            },
         };
         addTask({ task });
     };
@@ -51,11 +55,12 @@ const Form = ({
     const updateTextHandler = (e) => {
         updateText({ text: e.target.value });
     }
-
     const showDescHandler = (e) => {
         reverseShowState();
     }
-
+    const updateDescTextHandler = (e) => {
+        updateDescText({ text: e.target.value })
+    }
     const descFieldClasses = cn({
         "mb-3": true,
     })
@@ -74,7 +79,7 @@ const Form = ({
                     </label>
                 </div>
                 <div hidden={ UIState.desc.show == 'no' ? 'Hide' : '' } className={descFieldClasses}>
-                    <textarea className="form-control" rows="2" placeholder='Описание'></textarea>
+                    <textarea onChange={updateDescTextHandler} className="form-control" rows="2" placeholder='Описание'></textarea>
                 </div>
                 <button type="submit" onClick={addHandler} className="btn btn-primary">Добавить</button>
             </form>

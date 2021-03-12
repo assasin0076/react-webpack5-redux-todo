@@ -1,4 +1,8 @@
-
+.taskWithDesc {
+    &:hover {
+        cursor: pointer;
+    }
+}
 
 .buttonsGroup {
     width: 45px;
