@@ -35,13 +35,35 @@ const tasks = handleActions({
 
 const text = handleActions({
     [actions.updateText](state, { payload: { text = '' } } ) {
-        return text;
+      console.log(state);
+        return {
+          ...state,
+          taskText: text,
+        };
     }
-}, '');
+}, { taskText:'', descText:'' });
+
+const UIState = handleActions({
+  [actions.reverseShowState](state, { payload }) {
+    return {
+      ...state,
+      desc: {
+        ...state.desc,
+        show: state.desc.show == 'no' ? 'yes' : 'no' 
+      }
+    }
+  }
+}, 
+{ 
+  desc: {
+    show: 'no'
+} 
+})
 
 const rootReducer = combineReducers({
     tasks,
-    text
+    text,
+    UIState
 });
 
 export default rootReducer;
